@@ -13,19 +13,20 @@
         <div class="d-flex align-items-center flex-wrap text-nowrap">
             <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0" id="dashboardDate">
                 <span class="input-group-text input-group-addon bg-transparent border-primary" data-toggle><i data-feather="calendar" class="text-primary"></i></span>
-                <input type="text" class="form-control bg-transparent border-primary" placeholder="Select date" data-input>
+                <input type="text" class="form-control bg-transparent border-primary" placeholder="Select date" data-input id="input-tgl">
             </div>
             <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0">
                 <i class="btn-icon-prepend" data-feather="download-cloud"></i> Download
             </button>
         </div>
     </div>
-
+    {{--  table today  --}}
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
+                <div class="card-title">Data Pasien Hari Ini</div>
                 <div class="table-responsive">
-                    <table class="table table-hover" id="table_pasien" style="width: 100%">
+                    <table class="table table-hover" id="table_pasien_today" style="width: 100%">
                         <thead>
                             <tr>
                                 <th>NO</th>
@@ -46,7 +47,7 @@
 @endsection
 @push('script')
     <script>
-        $('#table_pasien').DataTable({
+        $('#table_pasien_today').DataTable({
             processing: false,
             serverSide: true,
             ajax: {
@@ -54,7 +55,7 @@
             },
             columns: [
                 {data: 'DT_RowIndex', orderable: false, searchable: false,},
-                {data: 'kode_puskesmas'},
+                {data: 'nama_pkm'},
                 {data: 'nomorkartu'},
                 {data: 'namapoli'},
                 {data: 'nomorantrean'},
@@ -65,5 +66,19 @@
                 feather.replace();
             }
         });
+
+        $('#input-tgl').on('change', function() {
+            // Menampilkan loader saat AJAX request sedang diproses
+            $('#loader-container').show();
+            $('.loader').show();
+
+            var dateValue = $(this).val();
+            console.log(dateValue);
+
+            $('#loader-container').hide();
+            $('.loader').hide();
+
+        });
+
     </script>
 @endpush

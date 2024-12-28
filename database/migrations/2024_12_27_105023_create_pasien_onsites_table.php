@@ -13,12 +13,24 @@ return new class extends Migration
     {
         Schema::create('pasien_onsites', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('kode_puskesmas');
+            $table->string('kode_puskesmas');
             $table->string('nomorkartu')->nullable();
+            $table->string('nik')->nullable();
+            $table->string('nohp')->nullable();
+            $table->string('kodepoli')->nullable();
             $table->string('namapoli')->nullable();
+            $table->string('norm')->nullable();
+            $table->string('tanggalperiksa')->nullable();
+            $table->string('kodedoketer')->nullable();
+            $table->string('namadokter')->nullable();
+            $table->string('jampraktek')->nullable();
             $table->string('nomorantrean')->nullable();
-            $table->json('response')->nullable();
+            $table->string('angkaantrean')->nullable();
+            $table->string('keterangan')->nullable();
+            $table->string('response')->nullable();
+            $table->string('flag')->nullable();
             $table->timestamps();
+            $table->string('waktu_kirim')->nullable();
         });
     }
 

@@ -24,7 +24,22 @@
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-
+                <div class="card-title">Data Pasien Hari Ini</div>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="table_pasien_today" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th>NO</th>
+                                <th>Nama Puskesmas</th>
+                                <th>No Kartu</th>
+                                <th>Nama Poli</th>
+                                <th>No Antrean</th>
+                                <th>Respons</th>
+                                <th>Created At</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -32,6 +47,24 @@
 @endsection
 @push('script')
     <script>
-
+        $('#table_pasien_today').DataTable({
+            processing: false,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('data.pasien.today.client') }}",
+            },
+            columns: [
+                {data: 'DT_RowIndex', orderable: false, searchable: false,},
+                {data: 'nama_pkm'},
+                {data: 'nomorkartu'},
+                {data: 'namapoli'},
+                {data: 'nomorantrean'},
+                {data: 'response'},
+                {data: 'created_at'},
+            ],
+            drawCallback: function() {
+                feather.replace();
+            }
+        });
     </script>
 @endpush

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PasienOnsiteController;
+use App\Http\Controllers\PasienOnsiteLaporanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -31,6 +32,7 @@ Route::middleware('auth','ref_group_id:1')->group(function(){
         return view('admin');
     })->name('admin');
     Route::get('data-pasien-today', [PasienOnsiteController::class, 'data_pasien_today'])->name('data.pasien.today');
+    Route::get('data-pasien-old', [PasienOnsiteLaporanController::class, 'data_pasien_old'])->name('data.pasien.old');
 });
 
 // pasien
@@ -38,6 +40,8 @@ Route::middleware('auth','ref_group_id:2')->group(function(){
     Route::get('pasien', function(){
         return view('pasien');
     })->name('pasien');
+    Route::get('data-pasien-today_client', [PasienOnsiteController::class, 'data_pasien_today_client'])->name('data.pasien.today.client');
 });
 
-
+// generate user awal aplikasi
+Route::get('generate-user', [PasienOnsiteController::class, 'generate_user']);
