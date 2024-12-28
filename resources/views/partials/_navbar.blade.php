@@ -14,8 +14,8 @@
                             <img class="wd-80 ht-80 rounded-circle" src="" alt="">
                         </div>
                         <div class="text-center">
-                            <p class="tx-16 fw-bolder">Admin</p>
-                            <p class="tx-12 text-muted">admin@gmail.com</p>
+                            <p class="tx-16 fw-bolder">{{ Auth::user()->name }}</p>
+                            <p class="tx-12 text-muted">{{ Auth::user()->email ?? 'Tidak Ada Email' }}</p>
                         </div>
                     </div>
                     <ul class="list-unstyled p-1">
