@@ -63,7 +63,7 @@ class PasienOnsiteLaporanController extends Controller
 
             // Query untuk mengambil data berdasarkan tanggal
             $data = PasienOnsiteLaporan::query()
-                    ->whereBetween('created_at', [$startDate, $endDate])    ;
+                    ->whereBetween('created_at', [$startDate, $endDate]);
 
             // dd($data);
             return DataTables::of($data)
