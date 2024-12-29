@@ -40,12 +40,17 @@
 				<div class="row w-100 mx-0 auth-page">
 					<div class="col-md-4 col-xl-3 mx-auto text-center">
 						<div class="card">
-                            <h2>SILAHKAN LOGIN</h2>
-                            <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+                            @if (Auth::user() == null)
+                                <h2>SILAHKAN LOGIN</h2>
+                                <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+                            @elseif (Auth::user()->ref_group_id == "2")
+                                <a href="{{ route('pasien') }}" class="btn btn-primary">Dashboard</a>
+                            @elseif (Auth::user()->ref_group_id == '1')
+                                <a href="{{ route('admin') }}" class="btn btn-primary">Dashboard</a>
+                            @endif
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
