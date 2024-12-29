@@ -11,6 +11,7 @@
             <h4 class="mb-3 mb-md-0">Selamat Datang {{ Auth::user()->name }}</h4>
         </div>
         <div class="d-flex align-items-center flex-wrap text-nowrap">
+
             <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0" id="dashboardDate">
                 <span class="input-group-text input-group-addon bg-transparent border-primary" data-toggle><i data-feather="calendar" class="text-primary"></i></span>
                 <input type="text" class="form-control bg-transparent border-primary" placeholder="Select date" data-input id="startDate">
@@ -25,9 +26,11 @@
                     <option value="" disabled selected>PILIH POLI</option>
                 </select>
             </div>
-
-            <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0">
-                <i class="btn-icon-prepend" data-feather="download-cloud"></i> Download
+            <button type="button" class="btn btn-success btn-icon-text me-2 mb-2 mb-md-0">
+                <i class="btn-icon-prepend" data-feather="download-cloud"></i> Excel
+            </button>
+            <button type="button" class="btn btn-warning btn-icon-text mb-2 mb-md-0" id="resetTable">
+                <i class="btn-icon-prepend" data-feather="refresh-ccw"></i> Reset
             </button>
         </div>
     </div>
@@ -35,7 +38,7 @@
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <div class="card-title">Data Pasien Hari Ini</div>
+                <div class="card-title" id="card-title">Data Pasien Hari Ini</div>
                 <div class="table-responsive">
                     <table class="table table-hover" id="table_pasien_today" style="width: 100%">
                         <thead>
@@ -59,6 +62,9 @@
 @push('script')
     <script>
         $(document).ready(function(){
+            $('#startDate').val('');
+            $('#endDate').val('');
+
             var table = $('#table_pasien_today').DataTable({
                 processing: false,
                 serverSide: true,
@@ -78,6 +84,35 @@
                     feather.replace();
                 }
             });
+
+            $('#resetTable').click(function(){
+                if ($.fn.dataTable.isDataTable('#table_pasien_today')) {
+                    $('#table_pasien_today').DataTable().clear().destroy();
+                    var table = $('#table_pasien_today').DataTable({
+                        processing: false,
+                        serverSide: true,
+                        ajax: {
+                            url: "{{ route('data.pasien.today') }}",
+                        },
+                        columns: [
+                            {data: 'DT_RowIndex', orderable: false, searchable: false},
+                            {data: 'nama_pkm'},
+                            {data: 'nomorkartu'},
+                            {data: 'namapoli'},
+                            {data: 'nomorantrean'},
+                            {data: 'response'},
+                            {data: 'created_at'},
+                        ],
+                        drawCallback: function() {
+                            feather.replace();
+                        }
+                    });
+                }
+                $('#selectPoli').empty();
+                $('#startDate').val('');
+                $('#endDate').val('');
+                $('#card-title').text("Data Pasien Hari Ini");
+            })
 
             $('#selectPoli').select2({
                 ajax: {
@@ -101,7 +136,7 @@
                     }
                 },
                 minimumInputLength: 1,
-                placeholder: "Pilih Poli",
+                placeholder: 'Pilih Poli',
             });
 
             $('#selectPoli').on('select2:select', function (e) {
@@ -109,6 +144,7 @@
                 var data = e.params.data;
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();
+
                 $('#loader-container').show();
                 $('.loader').show();
 
@@ -124,6 +160,7 @@
                     success: function(res){
                         $('#loader-container').hide();
                         $('.loader').hide();
+
                         $('#table_pasien_today').DataTable().clear().destroy();
                         $('#table_pasien_today').DataTable({
                             processing: false,
@@ -161,12 +198,17 @@
             })
 
 
+            $('#startDate').on('change', function(){
+                $('#endDate').val('');
+            });
+
             $('#endDate').on('change', function() {
                 // Menampilkan loader saat AJAX request sedang diproses
                 $('#loader-container').show();
                 $('.loader').show();
 
-                $('#selectPoli').empty();
+                $('#selectPoli').empty(); // bersihkan pilihan poli
+
 
                 var start = $('#startDate').val();
                 var end = $(this).val();
@@ -180,7 +222,7 @@
                         _token: "{{ csrf_token() }}",
                     },
                     success: function(res){
-
+                        $('#card-title').text('Data Berdasarkan Tanggal Yang Di Pilih');
                         {{--  revoke datatable yang ada dan ganti dengan data baru dari be  --}}
                         $('#table_pasien_today').DataTable().clear().destroy();
                         $('#table_pasien_today').DataTable({
