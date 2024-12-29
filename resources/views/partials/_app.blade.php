@@ -20,6 +20,7 @@
 	<!-- Plugin css for this page -->
     <link rel="stylesheet" href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/datatables.net-bs5/dataTables.bootstrap5.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendors/select2/select2.min.css') }}">
 	<!-- End plugin css for this page -->
 
 	<!-- inject:css -->
@@ -69,6 +70,7 @@
     <script src="{{ asset('assets/vendors/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/vendors/datatables.net/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('assets/vendors/datatables.net-bs5/dataTables.bootstrap5.js') }}"></script>
+    <script src="{{ asset('assets/vendors/select2/select2.min.js') }}"></script>
 	<!-- End plugin js for this page -->
 
 	<!-- inject:js -->
@@ -80,6 +82,7 @@
 	<!-- Custom js for this page -->
     <script src="{{ asset('assets/js/dashboard-light.js') }}"></script>
     <script src="{{ asset('assets/js/data-table.js') }}"></script>
+    <script src="{{ asset('assets/js/select2.js') }}"></script>
 	<!-- End custom js for this page -->
     @stack('script')
 </body>

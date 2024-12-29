@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('pasien_onsite_laporans', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('kode_puskesmas');
+            $table->string('kode_puskesmas');
             $table->string('nomorkartu')->nullable();
+            $table->string('kodepoli')->nullable();
             $table->string('namapoli')->nullable();
             $table->string('nomorantrean')->nullable();
-            $table->json('response')->nullable();
+            $table->string('response')->nullable();
             $table->timestamps();
         });
     }

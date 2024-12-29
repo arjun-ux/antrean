@@ -16,7 +16,8 @@ class PasienOnsiteController extends Controller
     public function data_pasien_today(Request $request){
         if ($request->ajax()) {
             $data = PasienOnsite::query();
-            return DataTables::of($data)
+
+            return DataTables::eloquent($data)
                     ->addColumn('nama_pkm', function($row){
                         return $row->user->name;
                     })
@@ -31,8 +32,10 @@ class PasienOnsiteController extends Controller
     // data pasien hari ini by client
     public function data_pasien_today_client(Request $request){
         if ($request->ajax()) {
-            $data = PasienOnsite::query()->where('kode_puskesmas', Auth::user()->username);
-            return DataTables::of($data)
+            $data = PasienOnsite::query()
+                    ->where('kode_puskesmas', Auth::user()->username);
+
+            return DataTables::eloquent($data)
                     ->addColumn('nama_pkm', function($row){
                         return $row->user->name;
                     })
@@ -103,7 +106,7 @@ class PasienOnsiteController extends Controller
 
                 // Buat entri baru di database
                 PasienOnsite::create([
-                    'id' => $key['id'],
+                    // 'id' => $key['id'],
                     'kode_puskesmas' => $key['kode_puskesmas'],
                     'nomorkartu' => $key['nomorkartu'],
                     'namapoli' => $key['namapoli'],

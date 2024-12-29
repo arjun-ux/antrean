@@ -13,8 +13,19 @@
         <div class="d-flex align-items-center flex-wrap text-nowrap">
             <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0" id="dashboardDate">
                 <span class="input-group-text input-group-addon bg-transparent border-primary" data-toggle><i data-feather="calendar" class="text-primary"></i></span>
-                <input type="text" class="form-control bg-transparent border-primary" placeholder="Select date" data-input id="input-tgl">
+                <input type="text" class="form-control bg-transparent border-primary" placeholder="Select date" data-input id="startDate">
             </div>
+            <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0" id="dashboardDate">
+                <span class="input-group-text input-group-addon bg-transparent border-success" data-toggle><i data-feather="calendar" class="text-success"></i></span>
+                <input type="text" class="form-control bg-transparent border-success" placeholder="Select date" data-input id="endDate">
+            </div>
+            <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0">
+                <select class="form-select select2"
+                    id="selectPoli" name="namapoli" required >
+                    <option value="" disabled selected>PILIH POLI</option>
+                </select>
+            </div>
+
             <button type="button" class="btn btn-primary btn-icon-text mb-2 mb-md-0">
                 <i class="btn-icon-prepend" data-feather="download-cloud"></i> Download
             </button>
@@ -47,38 +58,168 @@
 @endsection
 @push('script')
     <script>
-        $('#table_pasien_today').DataTable({
-            processing: false,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('data.pasien.today') }}",
-            },
-            columns: [
-                {data: 'DT_RowIndex', orderable: false, searchable: false,},
-                {data: 'nama_pkm'},
-                {data: 'nomorkartu'},
-                {data: 'namapoli'},
-                {data: 'nomorantrean'},
-                {data: 'response'},
-                {data: 'created_at'},
-            ],
-            drawCallback: function() {
-                feather.replace();
-            }
-        });
+        $(document).ready(function(){
+            var table = $('#table_pasien_today').DataTable({
+                processing: false,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('data.pasien.today') }}",
+                },
+                columns: [
+                    {data: 'DT_RowIndex', orderable: false, searchable: false},
+                    {data: 'nama_pkm'},
+                    {data: 'nomorkartu'},
+                    {data: 'namapoli'},
+                    {data: 'nomorantrean'},
+                    {data: 'response'},
+                    {data: 'created_at'},
+                ],
+                drawCallback: function() {
+                    feather.replace();
+                }
+            });
 
-        $('#input-tgl').on('change', function() {
-            // Menampilkan loader saat AJAX request sedang diproses
-            $('#loader-container').show();
-            $('.loader').show();
+            $('#selectPoli').select2({
+                ajax: {
+                    url: "{{ route('get.poli') }}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term,
+                            page: params.page || 1
+                        };
+                    },
+                    processResults: function (data) {
 
-            var dateValue = $(this).val();
-            console.log(dateValue);
+                        return {
+                            results: data.data,
+                            pagination: {
+                                more: data.pagination
+                            }
+                        };
+                    }
+                },
+                minimumInputLength: 1,
+                placeholder: "Pilih Poli",
+            });
 
-            $('#loader-container').hide();
-            $('.loader').hide();
+            $('#selectPoli').on('select2:select', function (e) {
 
-        });
+                var data = e.params.data;
+                var start = $('#startDate').val();
+                var end = $('#endDate').val();
+                $('#loader-container').show();
+                $('.loader').show();
+
+                $.ajax({
+                    url: "{{ route('selected_poli') }}",
+                    type: "POST",
+                    data: {
+                        start: start,
+                        end: end,
+                        poli: data.text,
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function(res){
+                        $('#loader-container').hide();
+                        $('.loader').hide();
+                        $('#table_pasien_today').DataTable().clear().destroy();
+                        $('#table_pasien_today').DataTable({
+                            processing: false,
+                            serverSide: true,
+                            ajax: {
+                                url: "{{ route('selected_poli') }}",
+                                type: "post",
+                                data: {
+                                    start: start,
+                                    end: end,
+                                    poli: data.text,
+                                    _token: "{{ csrf_token() }}",
+                                },
+                            },
+                            columns: [
+                                {data: 'DT_RowIndex', orderable: false, searchable: false,},
+                                {data: 'nama_pkm'},
+                                {data: 'nomorkartu'},
+                                {data: 'namapoli'},
+                                {data: 'nomorantrean'},
+                                {data: 'response'},
+                                {data: 'created_at'},
+                            ],
+                            drawCallback: function() {
+                                feather.replace();
+                            }
+                        })
+                    },
+                    error: function(xhr){
+                        $('#loader-container').hide();
+                        $('.loader').hide();
+                        console.log(xhr);
+                    }
+                });
+            })
+
+
+            $('#endDate').on('change', function() {
+                // Menampilkan loader saat AJAX request sedang diproses
+                $('#loader-container').show();
+                $('.loader').show();
+
+                $('#selectPoli').empty();
+
+                var start = $('#startDate').val();
+                var end = $(this).val();
+
+                $.ajax({
+                    url: "{{ route('data.pasien.old') }}",
+                    type: "post",
+                    data: {
+                        start: start,
+                        end: end,
+                        _token: "{{ csrf_token() }}",
+                    },
+                    success: function(res){
+
+                        {{--  revoke datatable yang ada dan ganti dengan data baru dari be  --}}
+                        $('#table_pasien_today').DataTable().clear().destroy();
+                        $('#table_pasien_today').DataTable({
+                            processing: false,
+                            serverSide: true,
+                            ajax: {
+                                url: "{{ route('data.pasien.old') }}",
+                                type: "post",
+                                data: {
+                                    start: start,
+                                    end: end,
+                                    _token: "{{ csrf_token() }}",
+                                },
+                            },
+                            columns: [
+                                {data: 'DT_RowIndex', orderable: false, searchable: false,},
+                                {data: 'nama_pkm'},
+                                {data: 'nomorkartu'},
+                                {data: 'namapoli'},
+                                {data: 'nomorantrean'},
+                                {data: 'response'},
+                                {data: 'created_at'},
+                            ],
+                            drawCallback: function() {
+                                feather.replace();
+                            }
+                        })
+
+                        $('#loader-container').hide();
+                        $('.loader').hide();
+                    },
+                    error: function(xhr){
+                        console.log(xhr)
+                        $('#loader-container').hide();
+                        $('.loader').hide();
+                    }
+                });
+            });
+        })
 
     </script>
 @endpush

@@ -25,17 +25,17 @@ Route::middleware('guest')->group(function(){
 // logout
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
-// admin
+// admin middleware
 Route::middleware('auth','ref_group_id:1')->group(function(){
     // index admin
     Route::get('admin', function(){
         return view('admin');
     })->name('admin');
     Route::get('data-pasien-today', [PasienOnsiteController::class, 'data_pasien_today'])->name('data.pasien.today');
-    Route::get('data-pasien-old', [PasienOnsiteLaporanController::class, 'data_pasien_old'])->name('data.pasien.old');
+    Route::post('data-pasien-old', [PasienOnsiteLaporanController::class, 'data_pasien_old'])->name('data.pasien.old');
 });
 
-// pasien
+// pasien middlewarre
 Route::middleware('auth','ref_group_id:2')->group(function(){
     Route::get('pasien', function(){
         return view('pasien');
@@ -43,5 +43,12 @@ Route::middleware('auth','ref_group_id:2')->group(function(){
     Route::get('data-pasien-today_client', [PasienOnsiteController::class, 'data_pasien_today_client'])->name('data.pasien.today.client');
 });
 
+// middleware auth
+Route::middleware('auth')->group(function(){
+    Route::get('get-poli', [PasienOnsiteLaporanController::class, 'getPoli'])->name('get.poli');
+    Route::post('selected-poli', [PasienOnsiteLaporanController::class, 'selected_poli'])->name('selected_poli');
+});
+
 // generate user awal aplikasi
 Route::get('generate-user', [PasienOnsiteController::class, 'generate_user']);
+Route::get('laporan', [PasienOnsiteLaporanController::class, 'generate_onsite_laporan']);
