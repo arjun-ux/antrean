@@ -135,7 +135,8 @@ class PasienOnsiteController extends Controller
                     'kodepoli' => $key['kodepoli'],
                     'namapoli' => $key['namapoli'],
                     'nomorantrean' => $key['nomorantrean'],
-                    'response' => $message, // Simpan pesan yang diambil dari JSON
+                    'response' => $message,
+                    'created_at' => $key['created_at'],
                 ]);
             }
 

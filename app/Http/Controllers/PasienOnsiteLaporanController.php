@@ -51,8 +51,11 @@ class PasienOnsiteLaporanController extends Controller
         // Memastikan request adalah AJAX
         if ($request->ajax()) {
 
+
+
             $startDate = Carbon::parse($request->start)->format('Y-m-d');
             $endDate = Carbon::parse($request->end)->format('Y-m-d');
+
 
             // Query untuk mengambil data berdasarkan tanggal
             $data = PasienOnsiteLaporan::query()
@@ -119,7 +122,8 @@ class PasienOnsiteLaporanController extends Controller
                     'kodepoli' => $key['kodepoli'],
                     'namapoli' => $key['namapoli'],
                     'nomorantrean' => $key['nomorantrean'],
-                    'response' => $message, // Simpan pesan yang diambil dari JSON
+                    'response' => $message,
+                    'created_at' => $key['created_at'],
                 ]);
             }
 

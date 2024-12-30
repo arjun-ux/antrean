@@ -107,16 +107,16 @@
 
             <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0" id="dashboardDate">
                 <span class="input-group-text input-group-addon bg-transparent border-primary" data-toggle><i data-feather="calendar" class="text-primary"></i></span>
-                <input type="text" class="form-control bg-transparent border-primary" placeholder="Select date" data-input id="startDate">
+                <input type="text" class="form-control bg-transparent border-primary" placeholder="Tanggal Awal" data-input id="startDate">
             </div>
             <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0" id="dashboardDate">
                 <span class="input-group-text input-group-addon bg-transparent border-success" data-toggle><i data-feather="calendar" class="text-success"></i></span>
-                <input type="text" class="form-control bg-transparent border-success" placeholder="Select date" data-input id="endDate">
+                <input type="text" class="form-control bg-transparent border-success" placeholder="Tanggal Akhir" data-input id="endDate">
             </div>
             <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0">
                 <select class="form-select select2"
                     id="selectPoli" name="namapoli" required >
-                    <option value="" disabled selected>PILIH POLI</option>
+                    <option value="" disabled selected>CARI POLI</option>
                 </select>
             </div>
             <button type="button" class="btn btn-warning btn-icon-text mb-2 mb-md-0" id="resetTable">
@@ -256,7 +256,7 @@
                     }
                 },
                 minimumInputLength: 1,
-                placeholder: 'Pilih Poli',
+                placeholder: 'CARI/KETIKAN POLI',
             });
 
             $('#selectPoli').on('select2:select', function (e) {
@@ -354,6 +354,8 @@
 
                 var start = $('#startDate').val();
                 var end = $(this).val();
+
+                console.log(end, start);
 
                 $('#card-title').text('Data Berdasarkan Tanggal Yang Di Pilih');
                 {{--  revoke datatable yang ada dan ganti dengan data baru dari be  --}}

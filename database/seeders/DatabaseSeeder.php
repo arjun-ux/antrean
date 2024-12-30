@@ -57,10 +57,6 @@ class DatabaseSeeder extends Seeder
                 'id_poli_bpjs' => '',
             ],
             [
-                'nama_poli' => 'MTBS',
-                'id_poli_bpjs' => '003',
-            ],
-            [
                 'nama_poli' => 'Imunisasi',
                 'id_poli_bpjs' => '023',
             ],
@@ -71,10 +67,6 @@ class DatabaseSeeder extends Seeder
             [
                 'nama_poli' => 'KB',
                 'id_poli_bpjs' => '008',
-            ],
-            [
-                'nama_poli' => 'Lansia',
-                'id_poli_bpjs' => '001',
             ],
             [
                 'nama_poli' => 'KRR',
