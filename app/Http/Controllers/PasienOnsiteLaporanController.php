@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PasienOnsiteLaporan;
+use App\Models\Poli;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,22 +14,14 @@ class PasienOnsiteLaporanController extends Controller
     // cari data poli
     public function getPoli(Request $request){
         $query = $request->get('q');
-        $namapoli = PasienOnsiteLaporan::where('namapoli', 'LIKE', "%{$query}%")
-                     ->select('namapoli') // hanya pilih kolom namapoli
-                     ->distinct()         // pastikan hanya nama poli yang unik
-                     ->paginate(10);
+        $namapoli = Poli::where('nama_poli', 'LIKE', "%{$query}%")
+                    ->paginate(5);
 
-        return response()->json([
-            'data' => $namapoli->map(function($poli) {
-                return [
-                    'id' => $poli->namapoli,  // id dapat menggunakan nama poli sebagai id
-                    'text' => $poli->namapoli, // text untuk ditampilkan di dropdown
-                ];
-            })
-        ]);
+        return response()->json($namapoli);
     }
     // cara berdasarkan poli
     public function selected_poli(Request $request){
+        // dd($request->all());
 
         if ($request->ajax()) {
 
@@ -38,7 +31,7 @@ class PasienOnsiteLaporanController extends Controller
             // Query untuk mengambil data berdasarkan tanggal
             $data = PasienOnsiteLaporan::query()
                 ->whereBetween('created_at', [$startDate, $endDate])
-                ->where('namapoli', $request->poli);
+                ->where('kodepoli', $request->poli);
 
             return DataTables::of($data)
                 ->addColumn('nama_pkm', function($row) {
@@ -106,10 +99,6 @@ class PasienOnsiteLaporanController extends Controller
             return response()->json(['message' => 'Data JSON tidak valid.'], 400);
         }
 
-        // $json = json_decode($pasiens[0]['response'], true);
-        // $mass = $json['metadata']['message'];
-        // dd($mass);
-
         // Proses data pasien, misalnya simpan ke database atau tampilkan
         try {
 
@@ -120,13 +109,14 @@ class PasienOnsiteLaporanController extends Controller
                 $json = json_decode($key['response'], true); // Mengonversi string JSON menjadi array
 
                 // Pastikan metadata dan message ada sebelum mengaksesnya
-                $message = $json['metadata']['message'] ?? 'Pesan tidak tersedia'; // Menggunakan null coalescing operator
+                $message = $json['metadata']['message'] ?? 'Pesan tidak tersedia';
 
                 // Buat entri baru di database
                 PasienOnsiteLaporan::UpdateOrCreate([
                     'id' => $key['id'],
                     'kode_puskesmas' => $key['kode_puskesmas'],
                     'nomorkartu' => $key['nomorkartu'],
+                    'kodepoli' => $key['kodepoli'],
                     'namapoli' => $key['namapoli'],
                     'nomorantrean' => $key['nomorantrean'],
                     'response' => $message, // Simpan pesan yang diambil dari JSON

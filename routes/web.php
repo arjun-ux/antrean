@@ -47,6 +47,7 @@ Route::middleware('auth','ref_group_id:2')->group(function(){
 Route::middleware('auth')->group(function(){
     Route::get('get-poli', [PasienOnsiteLaporanController::class, 'getPoli'])->name('get.poli');
     Route::post('selected-poli', [PasienOnsiteLaporanController::class, 'selected_poli'])->name('selected_poli');
+    Route::post('selected-poli-pasien', [PasienOnsiteController::class, 'selected_poli_pasien'])->name('selected_poli_pasien');
 });
 
 // generate user awal aplikasi

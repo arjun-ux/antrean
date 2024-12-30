@@ -181,7 +181,7 @@
                     {data: 'created_at'},
                 ],
                 pageLength: 100,
-                lengthMenu: [100,200,300],
+                lengthMenu: [[100,150,200,250,300,1000],[100,150,200,250,300,'All']],
                 dom: '<"top"lBf>rt<"bottom"ip><"clear">',
                 buttons: [
                     {
@@ -190,8 +190,7 @@
                         title: 'Data Export', // Nama file Excel
                         className: 'btn btn-success btn-sm',
                     }
-                ]
-
+                ],
             });
 
             $('#resetTable').click(function(){
@@ -213,7 +212,7 @@
                             {data: 'created_at'},
                         ],
                         pageLength: 100,
-                        lengthMenu: [100,200,300],
+                        lengthMenu: [[100,150,200,250,300,1000],[100,150,200,250,300,'All']],
                         dom: '<"top"lBf>rt<"bottom"ip><"clear">',
                         buttons: [
                             {
@@ -242,12 +241,16 @@
                             page: params.page || 1
                         };
                     },
-                    processResults: function (data) {
-
+                    processResults: function(data) {
                         return {
-                            results: data.data,
+                            results: data.data.map(function(namapoli) {
+                                return {
+                                    id: namapoli.id_poli_bpjs,
+                                    text: namapoli.nama_poli,
+                                };
+                            }),
                             pagination: {
-                                more: data.pagination
+                                more: data.current_page < data.last_page
                             }
                         };
                     }
@@ -258,68 +261,83 @@
 
             $('#selectPoli').on('select2:select', function (e) {
 
-                var data = e.params.data;
+                var data = $(this).val()
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();
 
-                $('#loader-container').show();
-                $('.loader').show();
+                $('#table_pasien_today').DataTable().clear().destroy();
 
-                $.ajax({
-                    url: "{{ route('selected_poli') }}",
-                    type: "POST",
-                    data: {
-                        start: start,
-                        end: end,
-                        poli: data.text,
-                        _token: "{{ csrf_token() }}",
-                    },
-                    success: function(res){
-                        $('#loader-container').hide();
-                        $('.loader').hide();
-
-                        $('#table_pasien_today').DataTable().clear().destroy();
-                        $('#table_pasien_today').DataTable({
-                            processing: false,
-                            serverSide: true,
-                            ajax: {
-                                url: "{{ route('selected_poli') }}",
-                                type: "post",
-                                data: {
-                                    start: start,
-                                    end: end,
-                                    poli: data.text,
-                                    _token: "{{ csrf_token() }}",
-                                },
+                if(!start || !end){
+                    $('#table_pasien_today').DataTable({
+                        processing: false,
+                        serverSide: true,
+                        ajax: {
+                            url: "{{ route('selected_poli_pasien') }}",
+                            type: "post",
+                            data: {
+                                poli: data,
+                                _token: "{{ csrf_token() }}",
                             },
-                            columns: [
-                                {data: 'DT_RowIndex', orderable: false, searchable: false,},
-                                {data: 'nama_pkm'},
-                                {data: 'nomorkartu'},
-                                {data: 'namapoli'},
-                                {data: 'nomorantrean'},
-                                {data: 'response'},
-                                {data: 'created_at'},
-                            ],
-                            pageLength: 100,
-                            lengthMenu: [100,200,300],
-                            dom: '<"top"lBf>rt<"bottom"ip><"clear">',
-                            buttons: [
-                                {
-                                    extend: 'excelHtml5', // Ekspor ke Excel
-                                    text: 'Excel', // Teks tombol
-                                    title: 'Data Export', // Nama file Excel
-                                    className: 'btn btn-success btn-sm',
-                                }
-                            ]
-                        })
-                    },
-                    error: function(xhr){
-                        $('#loader-container').hide();
-                        $('.loader').hide();
-                        console.log(xhr);
-                    }
-                });
+                        },
+                        columns: [
+                            {data: 'DT_RowIndex', orderable: false, searchable: false,},
+                            {data: 'nama_pkm'},
+                            {data: 'nomorkartu'},
+                            {data: 'namapoli'},
+                            {data: 'nomorantrean'},
+                            {data: 'response'},
+                            {data: 'created_at'},
+                        ],
+                        pageLength: 100,
+                        lengthMenu: [[100,150,200,250,300,1000],[100,150,200,250,300,'All']],
+                        dom: '<"top"lBf>rt<"bottom"ip><"clear">',
+                        buttons: [
+                            {
+                                extend: 'excelHtml5', // Ekspor ke Excel
+                                text: 'Excel', // Teks tombol
+                                title: 'Data Export', // Nama file Excel
+                                className: 'btn btn-success btn-sm',
+                            }
+                        ]
+                    })
+                    return;
+                }else if(start || end){
+                    $('#table_pasien_today').DataTable({
+                        processing: false,
+                        serverSide: true,
+                        ajax: {
+                            url: "{{ route('selected_poli') }}",
+                            type: "post",
+                            data: {
+                                start: start,
+                                end: end,
+                                poli: data,
+                                _token: "{{ csrf_token() }}",
+                            },
+                        },
+                        columns: [
+                            {data: 'DT_RowIndex', orderable: false, searchable: false,},
+                            {data: 'nama_pkm'},
+                            {data: 'nomorkartu'},
+                            {data: 'namapoli'},
+                            {data: 'nomorantrean'},
+                            {data: 'response'},
+                            {data: 'created_at'},
+                        ],
+                        pageLength: 100,
+                        lengthMenu: [[100,150,200,250,300,1000],[100,150,200,250,300,'All']],
+                        dom: '<"top"lBf>rt<"bottom"ip><"clear">',
+                        buttons: [
+                            {
+                                extend: 'excelHtml5', // Ekspor ke Excel
+                                text: 'Excel', // Teks tombol
+                                title: 'Data Export', // Nama file Excel
+                                className: 'btn btn-success btn-sm',
+                            }
+                        ]
+                    })
+                }
+
             })
 
 
@@ -334,65 +352,49 @@
 
                 $('#selectPoli').empty(); // bersihkan pilihan poli
 
-
                 var start = $('#startDate').val();
                 var end = $(this).val();
 
-                $.ajax({
-                    url: "{{ route('data.pasien.old') }}",
-                    type: "post",
-                    data: {
-                        start: start,
-                        end: end,
-                        _token: "{{ csrf_token() }}",
+                $('#card-title').text('Data Berdasarkan Tanggal Yang Di Pilih');
+                {{--  revoke datatable yang ada dan ganti dengan data baru dari be  --}}
+                $('#table_pasien_today').DataTable().clear().destroy();
+                $('#table_pasien_today').DataTable({
+                    processing: false,
+                    serverSide: true,
+                    ajax: {
+                        url: "{{ route('data.pasien.old') }}",
+                        type: "post",
+                        data: {
+                            start: start,
+                            end: end,
+                            _token: "{{ csrf_token() }}",
+                        },
                     },
-                    success: function(res){
-                        $('#card-title').text('Data Berdasarkan Tanggal Yang Di Pilih');
-                        {{--  revoke datatable yang ada dan ganti dengan data baru dari be  --}}
-                        $('#table_pasien_today').DataTable().clear().destroy();
-                        $('#table_pasien_today').DataTable({
-                            processing: false,
-                            serverSide: true,
-                            ajax: {
-                                url: "{{ route('data.pasien.old') }}",
-                                type: "post",
-                                data: {
-                                    start: start,
-                                    end: end,
-                                    _token: "{{ csrf_token() }}",
-                                },
-                            },
-                            columns: [
-                                {data: 'DT_RowIndex', orderable: false, searchable: false,},
-                                {data: 'nama_pkm'},
-                                {data: 'nomorkartu'},
-                                {data: 'namapoli'},
-                                {data: 'nomorantrean'},
-                                {data: 'response'},
-                                {data: 'created_at'},
-                            ],
-                            pageLength: 100,
-                            lengthMenu: [100,200,300],
-                            dom: '<"top"lBf>rt<"bottom"ip><"clear">',
-                            buttons: [
-                                {
-                                    extend: 'excelHtml5', // Ekspor ke Excel
-                                    text: 'Excel', // Teks tombol
-                                    title: 'Data Export', // Nama file Excel
-                                    className: 'btn btn-success btn-sm',
-                                }
-                            ]
-                        })
+                    columns: [
+                        {data: 'DT_RowIndex', orderable: false, searchable: false,},
+                        {data: 'nama_pkm'},
+                        {data: 'nomorkartu'},
+                        {data: 'namapoli'},
+                        {data: 'nomorantrean'},
+                        {data: 'response'},
+                        {data: 'created_at'},
+                    ],
+                    pageLength: 100,
+                    lengthMenu: [[100,150,200,250,300,1000],[100,150,200,250,300,'All']],
+                    dom: '<"top"lBf>rt<"bottom"ip><"clear">',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5', // Ekspor ke Excel
+                            text: 'Excel', // Teks tombol
+                            title: 'Data Export', // Nama file Excel
+                            className: 'btn btn-success btn-sm',
+                        }
+                    ]
+                })
 
-                        $('#loader-container').hide();
-                        $('.loader').hide();
-                    },
-                    error: function(xhr){
-                        console.log(xhr)
-                        $('#loader-container').hide();
-                        $('.loader').hide();
-                    }
-                });
+            $('#loader-container').hide();
+            $('.loader').hide();
+
             });
         })
 
