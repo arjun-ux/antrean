@@ -29,15 +29,23 @@ class PasienOnsiteController extends Controller
                     ->toJson();
         }
     }
+
+
     // cara berdasarkan poli
     public function selected_poli_pasien(Request $request){
-        // dd($request->all());
 
         if ($request->ajax()) {
-            // Query untuk mengambil data berdasarkan tanggal
+            // mengambil data berdasarkan kode poli
             $data = PasienOnsite::query()
                 ->where('kodepoli', $request->poli);
 
+            // ditambah jika authnya sebagai client
+            if (Auth::user()->ref_group_id == '2') {
+                // ditambah berdasarkan auth username
+                $data = PasienOnsite::query()
+                    ->where('kodepoli', $request->poli)
+                    ->where('kode_puskesmas', Auth::user()->username);
+            }
             return DataTables::of($data)
                 ->addColumn('nama_pkm', function($row) {
                     return $row->user->name;
@@ -51,6 +59,7 @@ class PasienOnsiteController extends Controller
         // Jika bukan AJAX, bisa mengembalikan response error atau redirect
         return response()->json(['error' => 'Invalid request'], 400);
     }
+
 
     // data pasien hari ini by client
     public function data_pasien_today_client(Request $request){
@@ -69,6 +78,7 @@ class PasienOnsiteController extends Controller
                     ->toJson();
         }
     }
+
 
     // function untuk generate data dari json pasien onsite
     public function generate_user(){

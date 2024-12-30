@@ -6,6 +6,7 @@ use App\Models\PasienOnsiteLaporan;
 use App\Models\Poli;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -19,20 +20,23 @@ class PasienOnsiteLaporanController extends Controller
 
         return response()->json($namapoli);
     }
+
+
     // cara berdasarkan poli
     public function selected_poli(Request $request){
-        // dd($request->all());
-
         if ($request->ajax()) {
-
             $startDate = Carbon::parse($request->start)->format('Y-m-d');
             $endDate = Carbon::parse($request->end)->format('Y-m-d');
-
-            // Query untuk mengambil data berdasarkan tanggal
+            // Query untuk mengambil data berdasarkan tanggal dan kode poli
             $data = PasienOnsiteLaporan::query()
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->where('kodepoli', $request->poli);
-
+            if (Auth::user()->ref_group_id == "2") {
+                $data = PasienOnsiteLaporan::query()
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->where('kodepoli', $request->poli)
+                    ->where('kode_puskesmas', Auth::user()->username);
+            }
             return DataTables::of($data)
                 ->addColumn('nama_pkm', function($row) {
                     return $row->user->name;
@@ -46,16 +50,15 @@ class PasienOnsiteLaporanController extends Controller
         // Jika bukan AJAX, bisa mengembalikan response error atau redirect
         return response()->json(['error' => 'Invalid request'], 400);
     }
+
+
     // data pasien old
     public function data_pasien_old(Request $request) {
         // Memastikan request adalah AJAX
         if ($request->ajax()) {
 
-
-
             $startDate = Carbon::parse($request->start)->format('Y-m-d');
             $endDate = Carbon::parse($request->end)->format('Y-m-d');
-
 
             // Query untuk mengambil data berdasarkan tanggal
             $data = PasienOnsiteLaporan::query()
@@ -72,7 +75,35 @@ class PasienOnsiteLaporanController extends Controller
                 ->addIndexColumn()
                 ->toJson();
         }
+        // Jika bukan AJAX, bisa mengembalikan response error atau redirect
+        return response()->json(['error' => 'Invalid request'], 400);
+    }
 
+
+    // data pasien old
+    public function data_pasien_old_client(Request $request) {
+        // Memastikan request adalah AJAX
+        if ($request->ajax()) {
+
+            $startDate = Carbon::parse($request->start)->format('Y-m-d');
+            $endDate = Carbon::parse($request->end)->format('Y-m-d');
+
+            // Query untuk mengambil data berdasarkan tanggal
+            $data = PasienOnsiteLaporan::query()
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->where('kode_puskesmas', Auth::user()->username);
+
+            // dd($data);
+            return DataTables::of($data)
+                ->addColumn('nama_pkm', function($row) {
+                    return $row->user->name;
+                })
+                ->editColumn('created_at', function ($data) {
+                    return Carbon::parse($data->created_at)->format('d-M-Y'); // Format tanggal
+                })
+                ->addIndexColumn()
+                ->toJson();
+        }
         // Jika bukan AJAX, bisa mengembalikan response error atau redirect
         return response()->json(['error' => 'Invalid request'], 400);
     }

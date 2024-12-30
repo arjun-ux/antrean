@@ -40,7 +40,9 @@ Route::middleware('auth','ref_group_id:2')->group(function(){
     Route::get('pasien', function(){
         return view('pasien');
     })->name('pasien');
-    Route::get('data-pasien-today_client', [PasienOnsiteController::class, 'data_pasien_today_client'])->name('data.pasien.today.client');
+    Route::get('data-pasien-today-client', [PasienOnsiteController::class, 'data_pasien_today_client'])->name('data.pasien.today.client');
+    Route::post('data-pasien-old-client', [PasienOnsiteLaporanController::class, 'data_pasien_old_client'])->name('data.pasien.old.client');
+
 });
 
 // middleware auth

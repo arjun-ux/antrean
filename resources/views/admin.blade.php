@@ -90,7 +90,6 @@
                 padding: 5px 10px; /* Padding yang lebih kecil */
             }
         }
-
     </style>
 @endpush
 <div class="page-content">
@@ -160,7 +159,8 @@
 
 <!-- Ekspor ke Excel -->
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-    <script>
+
+<script>
         $(document).ready(function(){
             $('#startDate').val('');
             $('#endDate').val('');
@@ -257,6 +257,20 @@
                 },
                 minimumInputLength: 1,
                 placeholder: 'CARI/KETIKAN POLI',
+                language: {
+                    noResults: function() {
+                        return "Tidak ada hasil ditemukan";
+                    },
+                    searching: function() {
+                        return "Mencari...";
+                    },
+                    inputTooShort: function() {
+                        return "Silakan masukkan 1 atau lebih karakter";
+                    },
+                    loadingMore: function() {
+                        return "Memuat lebih banyak hasil...";
+                    }
+                }
             });
 
             $('#selectPoli').on('select2:select', function (e) {
@@ -301,7 +315,9 @@
                         ]
                     })
                     return;
+
                 }else if(start || end){
+
                     $('#table_pasien_today').DataTable({
                         processing: false,
                         serverSide: true,
@@ -335,10 +351,9 @@
                                 className: 'btn btn-success btn-sm',
                             }
                         ]
-                    })
+                    });
                 }
-
-            })
+            });
 
 
             $('#startDate').on('change', function(){
@@ -346,18 +361,12 @@
             });
 
             $('#endDate').on('change', function() {
-                // Menampilkan loader saat AJAX request sedang diproses
-                $('#loader-container').show();
-                $('.loader').show();
-
+                $('#card-title').text('Data Berdasarkan Tanggal Yang Di Pilih');
                 $('#selectPoli').empty(); // bersihkan pilihan poli
 
                 var start = $('#startDate').val();
                 var end = $(this).val();
 
-                console.log(end, start);
-
-                $('#card-title').text('Data Berdasarkan Tanggal Yang Di Pilih');
                 {{--  revoke datatable yang ada dan ganti dengan data baru dari be  --}}
                 $('#table_pasien_today').DataTable().clear().destroy();
                 $('#table_pasien_today').DataTable({
@@ -392,11 +401,7 @@
                             className: 'btn btn-success btn-sm',
                         }
                     ]
-                })
-
-            $('#loader-container').hide();
-            $('.loader').hide();
-
+                });
             });
         })
 
