@@ -12,44 +12,10 @@ use Yajra\DataTables\Facades\DataTables;
 
 class PasienOnsiteLaporanController extends Controller
 {
-    // cari data poli
-    public function getPoli(Request $request){
-        $query = $request->get('q');
-        $namapoli = Poli::where('nama_poli', 'LIKE', "%{$query}%")
-                    ->paginate(5);
-
-        return response()->json($namapoli);
-    }
 
 
-    // cara berdasarkan poli
-    public function selected_poli(Request $request){
-        if ($request->ajax()) {
-            $startDate = Carbon::parse($request->start)->format('Y-m-d');
-            $endDate = Carbon::parse($request->end)->format('Y-m-d');
-            // Query untuk mengambil data berdasarkan tanggal dan kode poli
-            $data = PasienOnsiteLaporan::query()
-                ->whereBetween('created_at', [$startDate, $endDate])
-                ->where('kodepoli', $request->poli);
-            if (Auth::user()->ref_group_id == "2") {
-                $data = PasienOnsiteLaporan::query()
-                    ->whereBetween('created_at', [$startDate, $endDate])
-                    ->where('kodepoli', $request->poli)
-                    ->where('kode_puskesmas', Auth::user()->username);
-            }
-            return DataTables::of($data)
-                ->addColumn('nama_pkm', function($row) {
-                    return $row->user->name;
-                })
-                ->editColumn('created_at', function ($data) {
-                    return Carbon::parse($data->created_at)->format('d-M-Y'); // Format tanggal
-                })
-                ->addIndexColumn()
-                ->toJson();
-        }
-        // Jika bukan AJAX, bisa mengembalikan response error atau redirect
-        return response()->json(['error' => 'Invalid request'], 400);
-    }
+
+
 
 
     // data pasien old

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PasienOnsiteController;
 use App\Http\Controllers\PasienOnsiteLaporanController;
+use App\Http\Controllers\PoliController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -47,9 +48,14 @@ Route::middleware('auth','ref_group_id:2')->group(function(){
 
 // middleware auth
 Route::middleware('auth')->group(function(){
-    Route::get('get-poli', [PasienOnsiteLaporanController::class, 'getPoli'])->name('get.poli');
-    Route::post('selected-poli', [PasienOnsiteLaporanController::class, 'selected_poli'])->name('selected_poli');
-    Route::post('selected-poli-pasien', [PasienOnsiteController::class, 'selected_poli_pasien'])->name('selected_poli_pasien');
+    // poli
+    Route::get('get-poli', [PoliController::class, 'getPoli'])->name('get.poli');
+    Route::post('selected-poli', [PoliController::class, 'selected_poli'])->name('selected_poli');
+    Route::post('selected-poli-pasien', [PoliController::class, 'selected_poli_pasien'])->name('selected_poli_pasien');
+    // pkm
+    Route::get('get-pkm', [PoliController::class, 'getPkm'])->name('get.pkm');
+    Route::post('selected-pkm', [PoliController::class, 'selected_pkm'])->name('selected_pkm');
+    Route::post('selected-pkm-pasien', [PoliController::class, 'selected_pkm_pasien'])->name('selected_pkm_pasien');
 });
 
 // generate user awal aplikasi
