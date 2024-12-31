@@ -15,9 +15,7 @@ class PasienOnsiteController extends Controller
     // data pasien hari ini admin
     public function data_pasien_today(Request $request){
         if ($request->ajax()) {
-
             $data = PasienOnsite::query();
-
             return DataTables::eloquent($data)
                     ->addColumn('nama_pkm', function($row){
                         return $row->user->name;
@@ -72,7 +70,7 @@ class PasienOnsiteController extends Controller
             User::create([
                 'ref_group_id' => '1',
                 'username' => 'admin',
-                'password' => "$2y$12$7Zpf82aQ2Pq3G/CexNf8g.cU9O4GY0oQn36BiVON774quwCmZR0qm", //pass
+                'password' => env("PASSWORD_USER"),
                 'name' => 'admin',
                 'email' => 'admin@gmail.com',
             ]);
@@ -81,7 +79,7 @@ class PasienOnsiteController extends Controller
                     'ref_group_id' => $key['ref_group_id'],
                     'name' => $key['name'],
                     'username' => $key['username'],
-                    'password' => "$2y$12$7Zpf82aQ2Pq3G/CexNf8g.cU9O4GY0oQn36BiVON774quwCmZR0qm", // pass
+                    'password' => env("PASSWORD_USER"),
                 ]);
             }
             foreach ($pasiens as $key) {

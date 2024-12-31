@@ -285,7 +285,7 @@
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();
                 var poli = $('#selectPoli').val();
-console.log(poli)
+
                 $('#table_pasien_today').DataTable().clear().destroy();
                 if(!start || !end || !poli){
                     $('#table_pasien_today').DataTable({

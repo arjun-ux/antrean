@@ -12,12 +12,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class PasienOnsiteLaporanController extends Controller
 {
-
-
-
-
-
-
     // data pasien old
     public function data_pasien_old(Request $request) {
         // Memastikan request adalah AJAX
