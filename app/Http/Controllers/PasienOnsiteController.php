@@ -98,7 +98,6 @@ class PasienOnsiteController extends Controller
                     'namapoli' => $key['namapoli'],
                     'nomorantrean' => $key['nomorantrean'],
                     'response' => $message,
-                    'created_at' => $key['created_at'],
                 ]);
             }
             DB::commit();
