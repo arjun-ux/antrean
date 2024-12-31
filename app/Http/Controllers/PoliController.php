@@ -88,9 +88,11 @@ class PoliController extends Controller
         if ($request->ajax()) {
             $startDate = Carbon::parse($request->start)->format('Y-m-d');
             $endDate = Carbon::parse($request->end)->format('Y-m-d');
+            $poli = $request->poli;
             // Query untuk mengambil data berdasarkan tanggal dan kode pkm
             $data = PasienOnsiteLaporan::query()
                 ->whereBetween('created_at', [$startDate, $endDate])
+                ->where('kodepoli', $poli)
                 ->where('kode_puskesmas', $request->username);
 
             return DataTables::of($data)

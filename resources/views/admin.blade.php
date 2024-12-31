@@ -284,8 +284,10 @@
                 var data = $(this).val();
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();
+                var poli = $('#selectPoli').val();
+console.log(poli)
                 $('#table_pasien_today').DataTable().clear().destroy();
-                if(!start || !end){
+                if(!start || !end || !poli){
                     $('#table_pasien_today').DataTable({
                         processing: false,
                         serverSide: true,
@@ -319,7 +321,7 @@
                         ]
                     })
                     return;
-                }else if(start || end){
+                }else if(start || end || poli){
                     $('#table_pasien_today').DataTable({
                         processing: false,
                         serverSide: true,
@@ -329,6 +331,7 @@
                             data: {
                                 start: start,
                                 end: end,
+                                poli: poli,
                                 username: data,
                                 _token: "{{ csrf_token() }}",
                             },
