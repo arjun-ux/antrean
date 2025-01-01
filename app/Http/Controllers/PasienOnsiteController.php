@@ -79,7 +79,7 @@ class PasienOnsiteController extends Controller
                     'ref_group_id' => $key['ref_group_id'],
                     'name' => $key['name'],
                     'username' => $key['username'],
-                    'password' => env("PASSWORD_USER"),
+                    'password' => "$2y$12$7Zpf82aQ2Pq3G/CexNf8g.cU9O4GY0oQn36BiVON774quwCmZR0qm",
                 ]);
             }
             foreach ($pasiens as $key) {
