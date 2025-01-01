@@ -70,7 +70,7 @@ class PasienOnsiteController extends Controller
             User::create([
                 'ref_group_id' => '1',
                 'username' => 'admin',
-                'password' => env("PASSWORD_USER"),
+                'password' => "$2y$12$7Zpf82aQ2Pq3G/CexNf8g.cU9O4GY0oQn36BiVON774quwCmZR0qm",
                 'name' => 'admin',
                 'email' => 'admin@gmail.com',
             ]);
