@@ -64,49 +64,53 @@ class PasienOnsiteController extends Controller
         if (!$users) {
             return response()->json(['message' => 'Data JSON tidak valid.'], 400);
         }
-        // Proses data pasien, misalnya simpan ke database atau tampilkan
-        try {
-            DB::beginTransaction();
-            User::create([
-                'ref_group_id' => '1',
-                'username' => 'admin',
-                'password' => "$2y$12$7Zpf82aQ2Pq3G/CexNf8g.cU9O4GY0oQn36BiVON774quwCmZR0qm",
-                'name' => 'admin',
-                'email' => 'admin@gmail.com',
-            ]);
-            foreach ($users as $key) {
+        $data_user = User::where('id', 1)->first();
+        if (!$data_user) {
+            // Proses data pasien, misalnya simpan ke database atau tampilkan
+            try {
+                DB::beginTransaction();
                 User::create([
-                    'ref_group_id' => $key['ref_group_id'],
-                    'name' => $key['name'],
-                    'username' => $key['username'],
+                    'ref_group_id' => '1',
+                    'username' => 'admin',
                     'password' => "$2y$12$7Zpf82aQ2Pq3G/CexNf8g.cU9O4GY0oQn36BiVON774quwCmZR0qm",
+                    'name' => 'admin',
+                    'email' => 'admin@gmail.com',
                 ]);
-            }
-            foreach ($pasiens as $key) {
-                // Decode response JSON dari $key
-                $json = json_decode($key['response'], true); // Mengonversi string JSON menjadi array
+                foreach ($users as $key) {
+                    User::create([
+                        'ref_group_id' => $key['ref_group_id'],
+                        'name' => $key['name'],
+                        'username' => $key['username'],
+                        'password' => "$2y$12$7Zpf82aQ2Pq3G/CexNf8g.cU9O4GY0oQn36BiVON774quwCmZR0qm",
+                    ]);
+                }
+                foreach ($pasiens as $key) {
+                    // Decode response JSON dari $key
+                    $json = json_decode($key['response'], true); // Mengonversi string JSON menjadi array
 
-                // Pastikan metadata dan message ada sebelum mengaksesnya
-                $message = $json['metadata']['message'] ?? 'Pesan tidak tersedia'; // Menggunakan null coalescing operator
+                    // Pastikan metadata dan message ada sebelum mengaksesnya
+                    $message = $json['metadata']['message'] ?? 'Pesan tidak tersedia'; // Menggunakan null coalescing operator
 
-                // Buat entri baru di database
-                PasienOnsite::create([
-                    // 'id' => $key['id'],
-                    'kode_puskesmas' => $key['kode_puskesmas'],
-                    'nomorkartu' => $key['nomorkartu'],
-                    'kodepoli' => $key['kodepoli'],
-                    'namapoli' => $key['namapoli'],
-                    'nomorantrean' => $key['nomorantrean'],
-                    'response' => $message,
-                ]);
+                    // Buat entri baru di database
+                    PasienOnsite::create([
+                        // 'id' => $key['id'],
+                        'kode_puskesmas' => $key['kode_puskesmas'],
+                        'nomorkartu' => $key['nomorkartu'],
+                        'kodepoli' => $key['kodepoli'],
+                        'namapoli' => $key['namapoli'],
+                        'nomorantrean' => $key['nomorantrean'],
+                        'response' => $message,
+                    ]);
+                }
+                DB::commit();
+            } catch (\Throwable $th) {
+                throw $th;
+                DB::rollBack();
+                return response()->json(['message' => 'Data gagal diproses.']);
             }
-            DB::commit();
-        } catch (\Throwable $th) {
-            throw $th;
-            DB::rollBack();
-            return response()->json(['message' => 'Data gagal diproses.']);
+            return response()->json(['message' => 'Data pasien berhasil diproses.']);
         }
-        return response()->json(['message' => 'Data pasien berhasil diproses.']);
+        return redirect()->back();
     }
 
 }

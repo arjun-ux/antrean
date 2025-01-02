@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PasienOnsiteController;
 use App\Http\Controllers\PasienOnsiteLaporanController;
 use App\Http\Controllers\PoliController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
