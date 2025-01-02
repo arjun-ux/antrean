@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Poli extends Model
 {
+    protected $connection = "mysql2";
+    protected $table = "poli";
     protected $guarded = [];
 }

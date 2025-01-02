@@ -15,6 +15,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        User::create([
+            'ref_group_id' => '1',
+            'username' => 'admin',
+            'password' => Hash::make('pass'),
+            'name' => 'admin',
+            'email' => 'admin@gmail.com',
+        ]);
+
         $poli = [
             [
                 'nama_poli' => 'BP Umum',
@@ -94,7 +102,7 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
-        DB::table('polis')->insert($poli);
+        // DB::table('polis')->insert($poli);
 
     }
 }

@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PasienOnsiteLaporan extends Model
 {
-    protected $table = 'pasien_onsite_laporans';
+    protected $connection = 'mysql2';
+    protected $table = 'pasien_onsite_laporan';
     protected $guarded = [];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'kode_puskesmas','username');
+        return $this->belongsTo(User::class, 'kode_puskesmas','username')->on("mysql");
     }
 }

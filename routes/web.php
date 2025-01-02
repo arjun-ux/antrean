@@ -4,7 +4,10 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PasienOnsiteController;
 use App\Http\Controllers\PasienOnsiteLaporanController;
 use App\Http\Controllers\PoliController;
+use App\Models\PasienOnsite;
+use App\Models\PasienOnsiteLaporan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,6 +36,7 @@ Route::middleware('auth','ref_group_id:1')->group(function(){
     Route::get('admin', function(){
         return view('admin');
     })->name('admin');
+    Route::get('generate-user', [PasienOnsiteController::class, 'generate_user']);
     Route::get('data-pasien-today', [PasienOnsiteController::class, 'data_pasien_today'])->name('data.pasien.today');
     Route::post('data-pasien-old', [PasienOnsiteLaporanController::class, 'data_pasien_old'])->name('data.pasien.old');
 });
@@ -60,5 +64,8 @@ Route::middleware('auth')->group(function(){
 });
 
 // generate user awal aplikasi
-Route::get('generate-user', [PasienOnsiteController::class, 'generate_user']);
-Route::get('laporan', [PasienOnsiteLaporanController::class, 'generate_onsite_laporan']);
+
+// Route::get('laporan', [PasienOnsiteLaporanController::class, 'generate_onsite_laporan']);
+
+
+

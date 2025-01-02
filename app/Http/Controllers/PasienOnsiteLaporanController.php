@@ -27,7 +27,14 @@ class PasienOnsiteLaporanController extends Controller
             // dd($data);
             return DataTables::of($data)
                 ->addColumn('nama_pkm', function($row) {
-                    return $row->user->name;
+                    // return $row->user->name;
+                    // Ambil data dari database utama (mysql) dengan DB::connection
+                    $user = DB::connection('mysql')->table('users')
+                        ->where('username', $row->kode_puskesmas)
+                        ->first();
+
+                    // Jika ditemukan, kembalikan nama, jika tidak kembalikan '-'
+                    return $user ? $user->name : '-';
                 })
                 ->editColumn('created_at', function ($data) {
                     return Carbon::parse($data->created_at)->format('d-M-Y'); // Format tanggal
@@ -56,7 +63,14 @@ class PasienOnsiteLaporanController extends Controller
             // dd($data);
             return DataTables::of($data)
                 ->addColumn('nama_pkm', function($row) {
-                    return $row->user->name;
+                    // return $row->user->name;
+                    // Ambil data user berdasarkan kode_puskesmas yang merujuk ke username
+                    $user = DB::connection('mysql')->table('users')
+                    ->where('username', $row->kode_puskesmas)
+                    ->first();
+
+                // Jika data user ditemukan, kembalikan nama, jika tidak kembalikan '-'
+                return $user ? $user->name : '-';
                 })
                 ->editColumn('created_at', function ($data) {
                     return Carbon::parse($data->created_at)->format('d-M-Y'); // Format tanggal
