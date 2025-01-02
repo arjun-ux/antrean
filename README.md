@@ -9,7 +9,6 @@ Sebelum melanjutkan instalasi, pastikan Anda sudah memiliki prasyarat berikut:
 - PHP >= 8.0
 - Composer (untuk mengelola dependensi PHP)
 - MySQL / PostgreSQL / SQLite (sesuai dengan konfigurasi yang Anda pilih)
-- Node.js dan NPM (untuk pengelolaan front-end assets)
 - Git (untuk meng-clone repositori)
 
 ## Instalasi di Lokal (Development)
