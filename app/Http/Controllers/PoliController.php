@@ -24,12 +24,15 @@ class PoliController extends Controller
     // cara berdasarkan poli
     public function selected_poli(Request $request){
         if ($request->ajax()) {
-            $startDate = Carbon::parse($request->start)->format('Y-m-d');
-            $endDate = Carbon::parse($request->end)->format('Y-m-d');
+            $startDate = Carbon::parse($request->start)->startOfDay();
+            $endDate = Carbon::parse($request->end)->endOfDay();
             // Query untuk mengambil data berdasarkan tanggal dan kode poli
-            $data = PasienOnsiteLaporan::query()
-                ->whereBetween('created_at', [$startDate, $endDate])
-                ->where('kodepoli', $request->poli);
+            $data = DB::connection('mysql2') // Ganti dengan nama koneksi database lain
+                    ->table('pasien_onsite_laporan')
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->where('kodepoli', $request->poli)
+                    ->get();
+
             if (Auth::user()->ref_group_id == "2") {
                 $data = PasienOnsiteLaporan::query()
                     ->whereBetween('created_at', [$startDate, $endDate])
@@ -38,7 +41,6 @@ class PoliController extends Controller
             }
             return DataTables::of($data)
                 ->addColumn('nama_pkm', function($row) {
-                    // return $row->user->name;
                     // Ambil data dari database utama (mysql) dengan DB::connection
                     $user = DB::connection('mysql')->table('users')
                         ->where('username', $row->kode_puskesmas)
@@ -61,8 +63,10 @@ class PoliController extends Controller
     public function selected_poli_pasien(Request $request){
         if ($request->ajax()) {
             // mengambil data berdasarkan kode poli
-            $data = PasienOnsite::query()
-                ->where('kodepoli', $request->poli);
+            $data = DB::connection('mysql2') // Ganti dengan nama koneksi database lain
+                    ->table('pasien_onsite_laporan')
+                    ->where('kodepoli', $request->poli)
+                    ->get();
             // ditambah jika authnya sebagai client
             if (Auth::user()->ref_group_id == '2') {
                 // ditambah berdasarkan auth username
@@ -72,12 +76,10 @@ class PoliController extends Controller
             }
             return DataTables::of($data)
                 ->addColumn('nama_pkm', function($row) {
-                    // return $row->user->name;
                     // Ambil data user berdasarkan kode_puskesmas yang merujuk ke username
                     $user = DB::connection('mysql')->table('users')
                         ->where('username', $row->kode_puskesmas)
                         ->first();
-
                     // Jika data user ditemukan, kembalikan nama, jika tidak kembalikan '-'
                     return $user ? $user->name : '-';
                 })
@@ -101,23 +103,22 @@ class PoliController extends Controller
     // cara berdasarkan pkm
     public function selected_pkm(Request $request){
         if ($request->ajax()) {
-            $startDate = Carbon::parse($request->start)->format('Y-m-d');
-            $endDate = Carbon::parse($request->end)->format('Y-m-d');
+            $startDate = Carbon::parse($request->start)->startOfDay();
+            $endDate = Carbon::parse($request->end)->endOfDay();
             $poli = $request->poli;
             // Query untuk mengambil data berdasarkan tanggal dan kode pkm
-            $data = PasienOnsiteLaporan::query()
-                ->whereBetween('created_at', [$startDate, $endDate])
-                ->where('kodepoli', $poli)
-                ->where('kode_puskesmas', $request->username);
-
+            $data = DB::connection('mysql2') // Ganti dengan nama koneksi database lain
+                    ->table('pasien_onsite_laporan')
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->where('kodepoli', $poli)
+                    ->where('kode_puskesmas', $request->username)
+                    ->get();
             return DataTables::of($data)
                 ->addColumn('nama_pkm', function($row) {
-                    // return $row->user->name;
                     // Ambil data dari database utama (mysql) dengan DB::connection
                     $user = DB::connection('mysql')->table('users')
                         ->where('username', $row->kode_puskesmas)
                         ->first();
-
                     // Jika ditemukan, kembalikan nama, jika tidak kembalikan '-'
                     return $user ? $user->name : '-';
                 })
@@ -140,7 +141,6 @@ class PoliController extends Controller
 
             return DataTables::of($data)
                 ->addColumn('nama_pkm', function($row) {
-                    // return $row->user->name;
                     // Ambil data user berdasarkan kode_puskesmas yang merujuk ke username
                     $user = DB::connection('mysql')->table('users')
                             ->where('username', $row->kode_puskesmas)

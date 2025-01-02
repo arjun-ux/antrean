@@ -62,10 +62,3 @@ Route::middleware('auth')->group(function(){
     Route::post('selected-pkm', [PoliController::class, 'selected_pkm'])->name('selected_pkm');
     Route::post('selected-pkm-pasien', [PoliController::class, 'selected_pkm_pasien'])->name('selected_pkm_pasien');
 });
-
-// generate user awal aplikasi
-
-// Route::get('laporan', [PasienOnsiteLaporanController::class, 'generate_onsite_laporan']);
-
-
-
