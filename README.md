@@ -36,7 +36,7 @@ Sebelum melanjutkan instalasi, pastikan Anda sudah memiliki prasyarat berikut:
 
 4. **Setting Database**
     Masuke Ke File .env
-
+    ```bash
     DB_CONNECTION=mysql // sesuaikan dengan koenksinya
     DB_HOST=127.0.0.1
     DB_PORT=3306
