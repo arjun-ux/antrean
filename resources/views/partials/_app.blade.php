@@ -47,7 +47,7 @@
 
 		<div class="page-wrapper">
 
-            <div class="loader-container" id="loader-container" style="display: none">
+            <div class="loader-container d-none" id="loader-container">
                 <div class="loader"></div>
             </div>
 

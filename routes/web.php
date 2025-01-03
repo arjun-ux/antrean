@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\PasienOnsiteController;
 use App\Http\Controllers\PasienOnsiteLaporanController;
 use App\Http\Controllers\PoliController;
@@ -39,6 +40,11 @@ Route::middleware('auth','ref_group_id:1')->group(function(){
     Route::get('generate-user', [PasienOnsiteController::class, 'generate_user']);
     Route::get('data-pasien-today', [PasienOnsiteController::class, 'data_pasien_today'])->name('data.pasien.today');
     Route::post('data-pasien-old', [PasienOnsiteLaporanController::class, 'data_pasien_old'])->name('data.pasien.old');
+    // user
+    Route::get('users', [UserController::class, 'index'])->name('users');
+    Route::get('data-user', [UserController::class, 'data_user'])->name('data.user');
+    Route::get('cek-user', [UserController::class, 'cek_user_baru'])->name('cek_user_baru');
+    Route::post('sinkron', [UserController::class, 'sinkron'])->name('sinkron');
 });
 
 // pasien middlewarre

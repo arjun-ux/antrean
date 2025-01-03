@@ -64,18 +64,15 @@ class PasienOnsiteController extends Controller
     public function generate_user(){
         // Lokasi file JSON (misalnya di storage/app/public)
         $file_user = storage_path('app/public/user.json');
-        // $file_pasien = storage_path('app/public/pasien_onsite.json');
-        // Cek apakah file ada
+
         if (!file_exists($file_user)) {
             return response()->json(['message' => 'File JSON tidak ditemukan.'], 404);
         }
         // Membaca konten file JSON
         $user_data = file_get_contents($file_user);
-        // $pasien_data = file_get_contents($file_pasien);
-        // Decode JSON ke array
+
         $users = json_decode($user_data, true);
-        // $pasiens = json_decode($pasien_data, true);
-        // Cek apakah data JSON valid
+
         if (!$users) {
             return response()->json(['message' => 'Data JSON tidak valid.'], 400);
         }
@@ -89,24 +86,6 @@ class PasienOnsiteController extends Controller
                     'password' => "$2y$12$7Zpf82aQ2Pq3G/CexNf8g.cU9O4GY0oQn36BiVON774quwCmZR0qm",
                 ]);
             }
-            // foreach ($pasiens as $key) {
-            //     // Decode response JSON dari $key
-            //     $json = json_decode($key['response'], true); // Mengonversi string JSON menjadi array
-
-            //     // Pastikan metadata dan message ada sebelum mengaksesnya
-            //     $message = $json['metadata']['message'] ?? 'Pesan tidak tersedia'; // Menggunakan null coalescing operator
-
-            //     // Buat entri baru di database
-            //     PasienOnsite::create([
-            //         // 'id' => $key['id'],
-            //         'kode_puskesmas' => $key['kode_puskesmas'],
-            //         'nomorkartu' => $key['nomorkartu'],
-            //         'kodepoli' => $key['kodepoli'],
-            //         'namapoli' => $key['namapoli'],
-            //         'nomorantrean' => $key['nomorantrean'],
-            //         'response' => $message,
-            //     ]);
-            // }
             DB::commit();
         } catch (\Throwable $th) {
             throw $th;

@@ -12,11 +12,26 @@
     <div class="sidebar-body">
         <ul class="nav">
         <li class="nav-item nav-category">Main</li>
-        <li class="nav-item">
-            <a href="#" class="nav-link">
-                <i class="link-icon" data-feather="box"></i>
-                <span class="link-title">Dashboard</span>
-            </a>
-        </li>
+        @if (Auth::user()->ref_group_id == '1')
+            <li class="nav-item">
+                <a href="{{ route('admin') }}" class="nav-link">
+                    <i class="link-icon" data-feather="box"></i>
+                    <span class="link-title">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('users') }}" class="nav-link">
+                    <i class="link-icon" data-feather="users"></i>
+                    <span class="link-title">Users</span>
+                </a>
+            </li>
+        @elseif (Auth::user()->ref_group_id == '2')
+            <li class="nav-item">
+                <a href="{{ route('pasien') }}" class="nav-link">
+                    <i class="link-icon" data-feather="box"></i>
+                    <span class="link-title">Dashboard</span>
+                </a>
+            </li>
+        @endif
     </div>
 </nav>
