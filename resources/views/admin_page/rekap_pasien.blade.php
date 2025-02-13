@@ -1,108 +1,25 @@
 @extends('partials._app')
 @section('content')
 @push('cssPage')
-    <style>
-        /* Mengatur container untuk kontrol DataTable */
-        .dataTables_wrapper .top {
-            display: flex;
-            justify-content: space-between; /* Semua elemen akan sejajar ke kiri dan kanan */
-            align-items: center; /* Menjaga elemen agar sejajar secara vertikal */
-            width: 100%; /* Memastikan wrapper mengisi lebar penuh */
-            flex-wrap: wrap; /* Membungkus elemen jika ruang terbatas */
-            gap: 10px; /* Memberikan jarak antar elemen */
-        }
-
-        /* Mengatur elemen lengthMenu, tombol ekspor dan search agar lebih rapat */
-        .dataTables_length, .dataTables_filter, .dt-buttons {
-            display: inline-block;
-            margin-right: 10px; /* Mengurangi jarak antar elemen */
-        }
-
-        /* Menyusun tombol ekspor agar sejajar dengan lengthMenu dan rapat */
-        .dataTables_wrapper .top .dt-buttons {
-            margin-left: 0px; /* Menjaga tombol ekspor di sebelah kiri dan rapat */
-        }
-
-        /* Untuk search agar tetap di sebelah kanan */
-        .dataTables_filter {
-            margin-left: auto; /* Memastikan search berada di sebelah kanan */
-        }
-
-        /* Responsif pada layar kecil: Mengubah layout agar lebih kompak */
-        @media (max-width: 1024px) {
-            .dataTables_wrapper .top {
-                justify-content: flex-start; /* Menyusun elemen-elemen di kiri */
-                flex-wrap: wrap; /* Membungkus elemen jika ruang terbatas */
-                gap: 5px; /* Mengurangi jarak antar elemen */
-            }
-
-            /* Memastikan lengthMenu dan tombol ekspor berada dalam satu baris */
-            .dataTables_length, .dataTables_filter, .dt-buttons {
-                flex: 1 1 100%; /* Membuat elemen-elemen ini mengambil lebar penuh */
-                margin-right: 0; /* Menghapus margin */
-            }
-
-            /* Membuat tombol ekspor lebih kecil pada layar kecil */
-            .dt-button {
-                font-size: 12px; /* Ukuran font yang lebih kecil */
-                padding: 5px 10px; /* Padding yang lebih kecil */
-            }
-        }
-
-        /* Responsif pada layar lebih kecil (mobile) */
-        @media (max-width: 768px) {
-            .dataTables_wrapper .top {
-                justify-content: center; /* Menyusun elemen-elemen di tengah */
-                text-align: center; /* Menjaga teks agar tetap di tengah */
-                gap: 10px; /* Menambahkan jarak antar elemen */
-            }
-
-            /* Membuat lengthMenu, search, dan tombol ekspor menggunakan lebar penuh */
-            .dataTables_length, .dataTables_filter, .dt-buttons {
-                flex: 1 1 100%; /* Membuat elemen-elemen ini mengambil lebar penuh */
-                margin-bottom: 10px; /* Memberikan jarak antar elemen */
-            }
-
-            /* Mengurangi ukuran font dan padding tombol ekspor pada layar kecil */
-            .dt-button {
-                font-size: 12px; /* Ukuran font yang lebih kecil */
-                padding: 5px 10px; /* Padding yang lebih kecil */
-            }
-        }
-
-        /* Responsif pada layar lebih kecil (mobile) */
-        @media (max-width: 480px) {
-            .dataTables_wrapper .top {
-                flex-direction: column; /* Menyusun elemen secara vertikal */
-                justify-content: center; /* Menyusun elemen-elemen di tengah */
-                gap: 5px; /* Mengurangi jarak antar elemen */
-            }
-
-            /* Memberikan jarak antar elemen di bawah */
-            .dataTables_length, .dataTables_filter, .dt-buttons {
-                flex: 1 1 100%; /* Membuat elemen-elemen ini mengambil lebar penuh */
-                margin-bottom: 10px; /* Memberikan jarak antar elemen */
-            }
-
-            /* Membuat ukuran font tombol lebih kecil pada layar kecil */
-            .dt-button {
-                font-size: 11px; /* Ukuran font yang lebih kecil */
-                padding: 5px 10px; /* Padding yang lebih kecil */
-            }
-        }
-    </style>
+<link rel="stylesheet" href="{{ asset('assets/css/light/mycss.css') }}">
 @endpush
 <div class="page-content">
+    {{--  alert  --}}
     @if (session('success_login'))
         <div class="alert alert-success">
             <h5>{{ session('success_login') }} <strong>{{ Auth::user()->name }}</strong></h5>
         </div>
     @endif
-    <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+
+
+
+    {{--  <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
         <div>
             <h4 class="mb-3 mb-md-0">Selamat Datang {{ Auth::user()->name }}</h4>
         </div>
-    </div>
+    </div>  --}}
+
+    {{--  button filter  --}}
     <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
         <div class="d-flex align-items-center flex-wrap text-nowrap">
             <div class="input-group flatpickr wd-200 me-2 mb-2 mb-md-0" id="dashboardDate">
@@ -164,6 +81,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <!-- Ekspor ke Excel -->
 <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+
 
 <script>
         $(document).ready(function(){

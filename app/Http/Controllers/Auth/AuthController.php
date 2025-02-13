@@ -30,10 +30,10 @@ class AuthController extends Controller
         if (Auth::attempt($credential)) {
             if (Auth::user()->ref_group_id == "1") {
                 $request->session()->regenerate();
-                return redirect()->route('admin')->with('success_login', 'Login Sukses Sebagai');
+                return redirect()->route('admin.index')->with('success_login', 'Login Sukses Sebagai');
             }else {
                 $request->session()->regenerate();
-                return redirect()->route('pasien')->with('success_login', 'Login Sukses Sebagai');
+                return redirect()->route('pasien.index')->with('success_login', 'Login Sukses Sebagai');
             }
         }else {
             return redirect()->back()->with('gagal_login', 'Username atau Password Salah!');

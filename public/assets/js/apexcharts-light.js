@@ -109,6 +109,7 @@ $(function() {
 
 
   // Apex Bar chart start
+
   if ($('#apexBar').length) {
     var options = {
       chart: {
@@ -127,7 +128,7 @@ $(function() {
       tooltip: {
         theme: 'light'
       },
-      colors: [colors.primary],    
+      colors: [colors.primary],
       grid: {
         padding: {
           bottom: -4
@@ -140,12 +141,12 @@ $(function() {
         }
       },
       series: [{
-        name: 'sales',
-        data: [30,40,45,50,49,60,70,91,125]
+        name: 'Pengunjung_PKM',
+        data: [30,40,45,50,49,60,70,91,125,30,40,45,50,49,60,70,91,125]
       }],
       xaxis: {
-        type: 'datetime',
-        categories: ['01/01/1991','01/01/1992','01/01/1993','01/01/1994','01/01/1995','01/01/1996','01/01/1997', '01/01/1998','01/01/1999'],
+        type: 'text',
+        categories: ['01/01/1991','01/01/1992','01/01/1993','01/01/1994','01/01/1995','01/01/1996','01/01/1997', '01/01/1998','01/01/1999','01/01/1991','01/01/1992','01/01/1993','01/01/1994','01/01/1995','01/01/1996','01/01/1997', '01/01/1998','01/01/1999'],
         axisBorder: {
           color: colors.gridBorder,
         },
@@ -172,7 +173,7 @@ $(function() {
         }
       }
     }
-    
+
     var apexBarChart = new ApexCharts(document.querySelector("#apexBar"), options);
     apexBarChart.render();
   }
@@ -458,12 +459,12 @@ $(function() {
 
 
 
-  
+
   // Apex Pie chart end
   if ($('#apexPie').length) {
     var options = {
       chart: {
-        height: 300,
+        height: 500,
         type: "pie",
         foreColor: colors.bodyColor,
         background: colors.cardBg,
@@ -496,9 +497,9 @@ $(function() {
       },
       series: [44, 55, 13, 33]
     };
-    
+
     var chart = new ApexCharts(document.querySelector("#apexPie"), options);
-    chart.render();  
+    chart.render();
   }
   // Apex Pie chart end
 
@@ -750,7 +751,7 @@ $(function() {
 
 
 
-  
+
   // Apex Scatter chart start
   if ($('#apexScatter').length) {
     var options = {
@@ -863,7 +864,7 @@ $(function() {
       },
       colors: [colors.primary, colors.warning, colors.danger, colors.info],
       fill: {
-        
+
       },
       grid: {
         padding: {
@@ -884,7 +885,7 @@ $(function() {
             background: colors.gridBorder,
             strokeWidth: '100%',
             opacity: 1,
-            margin: 5, 
+            margin: 5,
         },
         }
       },
@@ -901,11 +902,11 @@ $(function() {
         },
       },
     };
-    
+
     var chart = new ApexCharts(document.querySelector("#apexRadialBar"), options);
     chart.render();
     var chartAreaBounds = chart.w.globals.dom.baseEl.querySelector('.apexcharts-inner').getBoundingClientRect();
   }
-  // Apex Radialbar chart end  
+  // Apex Radialbar chart end
 
 });

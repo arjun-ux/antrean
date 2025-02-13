@@ -5,10 +5,7 @@ use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\PasienOnsiteController;
 use App\Http\Controllers\PasienOnsiteLaporanController;
 use App\Http\Controllers\PoliController;
-use App\Models\PasienOnsite;
-use App\Models\PasienOnsiteLaporan;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\RekapController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -35,8 +32,18 @@ Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth','ref_group_id:1')->group(function(){
     // index admin
     Route::get('admin', function(){
-        return view('admin');
-    })->name('admin');
+        return view('admin_page.index');
+    })->name('admin.index');
+    // data grafik pasien per pkm
+    Route::get('data-pasien-per-pkm', [RekapController::class, 'getPasienPerPKM'])->name('getPasienPerPKM');
+    // rekap pasien
+    Route::get('rekap-pasien', function(){
+        return view('admin_page.rekap_pasien');
+    })->name('rekap_pasien');
+    // rekap per pkm
+    Route::get('rekap-per-pkm', [RekapController::class, 'rekap_per_pkm'])->name('rekap_per_pkm');
+    Route::get('data-rekap', [RekapController::class, 'data_rekap'])->name('data.rekap');
+
     Route::get('generate-user', [PasienOnsiteController::class, 'generate_user']);
     Route::get('data-pasien-today', [PasienOnsiteController::class, 'data_pasien_today'])->name('data.pasien.today');
     Route::post('data-pasien-old', [PasienOnsiteLaporanController::class, 'data_pasien_old'])->name('data.pasien.old');
@@ -49,9 +56,13 @@ Route::middleware('auth','ref_group_id:1')->group(function(){
 
 // pasien middlewarre
 Route::middleware('auth','ref_group_id:2')->group(function(){
-    Route::get('pasien', function(){
-        return view('pasien');
-    })->name('pasien');
+    // halaman client index
+    Route::get('pasien-index', [RekapController::class, 'rekap_pkm'])->name('pasien.index');
+    // grafik
+    Route::get('data-pasien-on-pkm', [RekapController::class, 'getPasienOnPKM'])->name('getPasienOnPKM');
+    Route::get('pasien-rekap', function(){
+        return view('client_page.pasien');
+    })->name('pasien.rekap');
     Route::get('data-pasien-today-client', [PasienOnsiteController::class, 'data_pasien_today_client'])->name('data.pasien.today.client');
     Route::post('data-pasien-old-client', [PasienOnsiteLaporanController::class, 'data_pasien_old_client'])->name('data.pasien.old.client');
 
