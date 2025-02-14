@@ -8,4 +8,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/pasien-onsite', [ApiPasienController::class, 'getDataPasienOnsite']);
+Route::get('/v1/pasien-onsite', [ApiPasienController::class, 'getDataPasienOnsite']);
