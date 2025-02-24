@@ -106,12 +106,20 @@ class PoliController extends Controller
             $startDate = Carbon::parse($request->start)->startOfDay();
             $endDate = Carbon::parse($request->end)->endOfDay();
             $poli = $request->poli;
+
+            // Ambil nilai start dan length dari request (untuk limit dan offset)
+            $start = $request->start ?? 0;
+            $length = $request->length ?? 10;
             // Query untuk mengambil data berdasarkan tanggal dan kode pkm
             $data = DB::connection('mysql2') // Ganti dengan nama koneksi database lain
                     ->table('pasien_onsite_laporan')
-                    ->whereBetween('created_at', [$startDate, $endDate])
-                    ->where('kodepoli', $poli)
                     ->where('kode_puskesmas', $request->username)
+                    ->whereBetween('created_at', [$startDate, $endDate])
+                    ->when($poli, function ($query) use ($poli) {
+                        return $query->where('kodepoli', $poli);
+                    })
+                    ->offset($start)
+                    ->limit($length)
                     ->get();
             return DataTables::of($data)
                 ->addColumn('nama_pkm', function($row) {

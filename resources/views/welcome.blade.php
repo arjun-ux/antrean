@@ -44,9 +44,9 @@
                                 <h2>SILAHKAN LOGIN</h2>
                                 <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
                             @elseif (Auth::user()->ref_group_id == "2")
-                                <a href="{{ route('pasien') }}" class="btn btn-primary">Dashboard</a>
+                                <a href="{{ route('pasien.index') }}" class="btn btn-primary">Dashboard</a>
                             @elseif (Auth::user()->ref_group_id == '1')
-                                <a href="{{ route('admin') }}" class="btn btn-primary">Dashboard</a>
+                                <a href="{{ route('admin.index') }}" class="btn btn-primary">Dashboard</a>
                             @endif
 						</div>
 					</div>

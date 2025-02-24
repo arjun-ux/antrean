@@ -18,11 +18,15 @@ class PasienOnsiteLaporanController extends Controller
         if ($request->ajax()) {
             $startDate = Carbon::parse($request->start)->startOfDay();
             $endDate = Carbon::parse($request->end)->endOfDay();
+            $start = $request->start ?? 0;
+            $length = $request->length ?? 10;
             $data = DB::connection('mysql2') // Ganti dengan nama koneksi database lain
                     ->table('pasien_onsite_laporan')
                     ->whereBetween('created_at', [$startDate, $endDate])
+                    ->offset($start)
+                    ->limit($length)
                     ->get();
-            // dd($data);
+
             return DataTables::of($data)
                 ->addColumn('nama_pkm', function($row) {
                     // Ambil data dari database utama (mysql) dengan DB::connection

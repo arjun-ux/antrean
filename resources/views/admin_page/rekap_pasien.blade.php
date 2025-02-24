@@ -198,14 +198,16 @@
                 }
             });
             // selected pkm
+
             $('#selectPkm').on('select2:select', function (e) {
                 var data = $(this).val();
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();
                 var poli = $('#selectPoli').val();
 
+
                 $('#table_pasien_today').DataTable().clear().destroy();
-                if(!start || !end || !poli){
+                if(!start && !end && !poli){
                     $('#table_pasien_today').DataTable({
                         processing: false,
                         serverSide: true,
@@ -238,7 +240,6 @@
                             }
                         ]
                     })
-                    return;
                 }else if(start || end || poli){
                     $('#table_pasien_today').DataTable({
                         processing: false,
